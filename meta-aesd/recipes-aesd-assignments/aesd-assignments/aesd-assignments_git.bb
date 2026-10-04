@@ -2,15 +2,21 @@
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
+SRC_URI = "git://://github.com... \
+           http://example.com"
+
+# PLACE THE CHECKSUM RIGHT HERE [1]
+SRC_URI[sha256sum] = "34e3e699f80813952a19f144972582faf2b5f52b6ceb6dafa7df52bb799f028e"
+
 inherit update-rc.d
 
 # TODO: Set this  with the path to your assignments repo.  Use https protocol and a public
 # repo, or see assignment instructions for use with ssh keys
-SRC_URI = "https://github.com/cu-ecen-aeld/assignment-3-0xBEE5-ClintFurrer.git;protocol=https;nobranch=1"
+SRC_URI = "git://github.com/cu-ecen-aeld/assignment-3-0xBEE5-ClintFurrer.git;protocol=https;nobranch=1"
 
 PV = "1.0+git${SRCPV}"
 # TODO: set to reference a specific commit hash in your assignment repo
-SRCREV = 91d1b8980ac84428f10321283b01233a23a6f7b5
+SRCREV = "b51eac892504ce5b8faece7404c23d4a265ffb99"
 
 # TODO: Add the aesdsocket application and any other files you will install in do_install below
 # See https://github.com/openembedded/openembedded-core/blob/wrynose/meta/conf/bitbake.conf for path prefixes like ${bindir}
@@ -20,8 +26,10 @@ FILES:${PN} += "${bindir}/aesdsocket \
 				 ${bindir}/finder-test.sh \
 				 ${base_bindir}/writer \
 				 ${base_bindir}/* \
-				 ${sysconfdir}/conf/*"
-INITSCRIPT_NAME:${PN} = "aesdsocket-start-stop"				 
+				 ${sysconfdir}/conf/* \
+				 ${sysconfdir}/init.d/*"
+INITSCRIPT_NAME = "aesdsocket-start-stop"	
+INITSCRIPT_PARAMS = "defaults 99"			 
 
 # TODO: customize these as necessary for any libraries you need for your application
 TARGET_LDFLAGS += "-pthread -lrt"
@@ -60,7 +68,7 @@ do_install () {
 	install -d ${D}${sysconfdir}/init.d
 
 	install -m 0755 ${B}/conf/* ${D}${sysconfdir}/conf/
-	install -m 0755 ${B}/assignment-autotest/test/assignment4/* ${D}${base_bindir}/
+	#install -m 0755 ${B}/assignment-autotest/test/assignment4/* ${D}${base_bindir}/
 
 	install -m 0755 ${B}/server/aesdsocket ${D}${bindir}/
 	install -m 0755 ${B}/server/aesdsocket-start-stop ${D}${sysconfdir}/init.d
